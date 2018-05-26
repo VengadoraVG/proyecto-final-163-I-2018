@@ -8,17 +8,9 @@ export const LOG_IN = {
 };
 export const LANDING = {
   route: '/',
-  label: 'Home'
+  label: 'Bienvenido'
 };
-export const HOME = {
-  route: '/home',
-  label: 'Home'
-};
-export const ACCOUNT = {
-  route: '/account',
-  label: 'Account Settings'
-};
-export const PASSWORD_RECOVERY = {
-  route: '/pw-recovery',
-  label: 'Password Recovery'
+export const ASSIGNATURE_CONFIGURATION = {
+  route: '/assignature-configuration',
+  label: 'Configuración de materia'
 };

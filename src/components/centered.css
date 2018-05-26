@@ -1,5 +1,5 @@
 body > div,
 body > div > div,
-body > div > div > div.login-form {
+body > div > div > div.container {
     height: 100%;
 }

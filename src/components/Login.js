@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
+import { Button, Form, Grid, Header, Segment } from 'semantic-ui-react';
 
 import './centered.css';
-import Navigation from './Navigation.js';
 
 class Login extends Component {
   constructor (props) {
@@ -11,13 +10,21 @@ class Login extends Component {
 
     this.state = {
       username: '',
-      password: ''
+      password: '',
     };
+
+    this.handleBinding = this.handleBinding.bind(this);
+  }
+
+  handleBinding (propName, event) {
+    var o = {};
+    o[propName] = event.target.value;
+    this.setState(o);
   }
 
   render () {
     return (
-      <div className="login-form">
+      <div className="container">
         <Grid
            textAlign='center'
            style={{ height: '100%' }}
@@ -34,6 +41,8 @@ class Login extends Component {
                    icon='user'
                    iconPosition='left'
                    placeholder='Nombre'
+                   value={ this.state.username }
+                   onChange={(e) => this.handleBinding('username', e)}
                    />
                 <Form.Input
                    fluid
@@ -41,14 +50,13 @@ class Login extends Component {
                    iconPosition='left'
                    placeholder='Contraseña'
                    type='password'
+                   value={ this.state.password }
+                   onChange={(e) => this.handleBinding('password', e)}
                    />
 
                 <Button color='teal' fluid size='large'>Login</Button>
               </Segment>
             </Form>
-            <Message>
-              No tienes cuenta? <a href='#'>Regístrate</a>
-            </Message>
           </Grid.Column>
         </Grid>
       </div>
