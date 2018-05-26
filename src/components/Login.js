@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 
-import './global.css';
+import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
+
+import './centered.css';
 import Navigation from './Navigation.js';
 
 class Login extends Component {
@@ -18,29 +17,40 @@ class Login extends Component {
 
   render () {
     return (
-      <div className="container">
-        <Navigation title="Login"/>
+      <div className="login-form">
+        <Grid
+           textAlign='center'
+           style={{ height: '100%' }}
+           verticalAlign='middle'
+           >
+          <Grid.Column style={{ maxWidth: 450 }}>
+            <Header as='h2' color='teal' textAlign='center'>
+              Accede
+            </Header>
+            <Form size='large'>
+              <Segment>
+                <Form.Input
+                   fluid
+                   icon='user'
+                   iconPosition='left'
+                   placeholder='Nombre'
+                   />
+                <Form.Input
+                   fluid
+                   icon='lock'
+                   iconPosition='left'
+                   placeholder='Contraseña'
+                   type='password'
+                   />
 
-
-        <div className="centered">
-          <div>
-            <form noValidate autoComplete="off">
-
-              <p>asidjfoaisdjfoijasdofijsaoidfj</p>
-              <TextField label="nombre de usuario"/>
-
-            </form>
-          </div>
-        </div>
-
-        <Grid container className="centered">
-          <Grid item xs={3} sm={1}/>
-          <Grid item xs={3} sm={1}>
-            <Paper className="card">asdf</Paper>
-          </Grid>
-          <Grid item xs={3} sm={1}/>
+                <Button color='teal' fluid size='large'>Login</Button>
+              </Segment>
+            </Form>
+            <Message>
+              No tienes cuenta? <a href='#'>Regístrate</a>
+            </Message>
+          </Grid.Column>
         </Grid>
-
       </div>
     );
   }

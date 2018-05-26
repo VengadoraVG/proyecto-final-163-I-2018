@@ -7,6 +7,8 @@ import {
 import Navigation from './Navigation';
 import SignUpPage from './SignUp';
 import LoginPage from './Login';
+import 'semantic-ui-css/semantic.min.css';
+
 import * as routes from '../constants/routes';
 
 const App = () => (
