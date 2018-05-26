@@ -1,10 +1,10 @@
 export const SIGN_UP = {
   route: '/sign-up',
-  label: 'Sign Up!'
+  label: 'Regístrate'
 };
-export const SIGN_IN = {
-  route: '/sign-in',
-  label: 'Sign In!'
+export const LOG_IN = {
+  route: '/log-in',
+  label: 'Accede'
 };
 export const LANDING = {
   route: '/',
