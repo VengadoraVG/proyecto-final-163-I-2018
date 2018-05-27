@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Button, Segment, Table } from 'semantic-ui-react';
 
-import './centered.css';
+import './compact.css';
 
 class MultipleSelector extends Component {
   constructor (props) {
@@ -21,6 +21,13 @@ class MultipleSelector extends Component {
 
   }
 
+  getIndex (hop, index) {
+    if (this.props.hop) {
+      return Math.round(hop * (this.props.hop) + index);
+    }
+    return index;
+  }
+
   getSlices () {
     var i;
     var last = 0;
@@ -38,9 +45,11 @@ class MultipleSelector extends Component {
     console.log(slices);
     return slices;
   }
-  
-  handleClick (index, event) {
-    var found = this.state.selected.indexOf(index);
+
+  handleClick (hop, index, event) {
+    var found;
+    index = this.getIndex(hop, index);
+    found = this.state.selected.indexOf(index);
     if (found >= 0) {
       this.removeSelection(found);
     } else {
@@ -78,30 +87,35 @@ class MultipleSelector extends Component {
     return (
       <div>
         <Segment compact>
-          <Table>
+          <Table className="compact-table">
             <Table.Body>
               {
                 this.getSlices().map((item, index) => {
                   return (
                     <Table.Row key={"slice-" + index}>
                       {
-                        item.map((item, index) => {
-                          return (
-                            <Table.Cell>
-                              <Button
-                                 icon toggle fluid
-                                 color={this.getColor(index)}
-                                 key={"option-" + index}
-                                 onClick={(e) => this.handleClick(index, e)}>
-                                { item }
-                              </Button>
-                            </Table.Cell>
-                          );
-                        })
+                        ((hop) => {
+                          return item.map((item, index) => {
+                            return (
+                              <Table.Cell
+                                 key={"option-" + this.getIndex(hop, index)}>
+                                <Button
+                                   icon toggle fluid
+                                   color={this.getColor(this.getIndex(hop, index))}
+                                   onClick={
+                                     (e) => this.handleClick(hop, index, e)
+                                    }
+                                  >
+                                  { item }
+                                </Button>
+                              </Table.Cell>
+                            );
+                          }, this);
+                        })(index)
                       }
                     </Table.Row>
                   );
-                })
+                }, this)
               }
       </Table.Body>
         </Table>
