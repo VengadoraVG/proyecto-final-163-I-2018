@@ -27,7 +27,7 @@ const App = () => (
           />
 
           <Route exact path={routes.ASSIGNATURE_CONFIGURATION.route}
-                 component={() => <AssignatureConfiguration />}
+                 component={() => <AssignatureConfiguration name='Lic. Solid Snake'/>}
             />
           <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js">
           </script>
