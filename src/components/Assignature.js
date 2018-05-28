@@ -83,13 +83,13 @@ class Assignature extends Component {
                    >
                   <HourSelector
                      ref={this.hourSelector}
-                     selected={this.props.model.hour}
+                     selected={this.props.model.hour || []}
                      onChange={(e) => this.handleChange(e, 'hour')}
                     />
                   <DaySelector
                      selection={2}
                      ref={this.daySelector}
-                     selected={this.props.model.day}
+                     selected={this.props.model.day || []}
                      onChange={(e) => this.handleChange(e, 'day')}
                     />
                 </Grid.Column>

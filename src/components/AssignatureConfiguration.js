@@ -45,16 +45,20 @@ class AssignatureConfiguration extends Component {
   }
 
   handleChange (model, index) {
-    console.log('assignature changed!!', model);
     var a = [...this.state.assignatures];
     a[index] = {...model};
-    console.log(a);
 
     this.setState({
       assignatures: a
     });
 
     var assignature = {...model};
+    if (!assignature.day) {
+      assignature.day = [];
+    }
+    if (!assignature.hour) {
+      assignature.hour = [];
+    }
     delete(assignature.name);
     db.setAssignature(this.state.professorID, assignature, model.name);
   }
@@ -72,10 +76,9 @@ class AssignatureConfiguration extends Component {
   }
 
   render () {
-
     return (
       <div>
-        <Header as='h1' textAlign='center'>
+        <Header as='h1' textAlign='center' color='teal'>
           Bienvenido {this.props.name}!
         </Header>
         <Grid

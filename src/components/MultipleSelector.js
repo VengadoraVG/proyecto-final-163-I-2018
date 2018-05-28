@@ -88,7 +88,6 @@ class MultipleSelector extends Component {
   }
 
   render () {
-    const selected = this.props.selected;
     this.getSlices();
 
     return (

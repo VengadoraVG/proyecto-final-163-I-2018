@@ -8,6 +8,7 @@ import Navigation from './Navigation';
 import SignUpPage from './SignUp';
 import LoginPage from './Login';
 import AssignatureConfiguration from './AssignatureConfiguration';
+import ProfessorManagement from './ProfessorManagement';
 
 import 'semantic-ui-css/semantic.min.css';
 
@@ -29,6 +30,10 @@ const App = () => (
           <Route exact path={routes.ASSIGNATURE_CONFIGURATION.route}
                  component={() => <AssignatureConfiguration name='Lic. Solid Snake'/>}
             />
+
+            <Route exact path={routes.PROFESSOR_MANAGEMENT.route}
+                   component={() => <ProfessorManagement />}
+              />
           <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js">
           </script>
           <script src="./firebase-config.js">
