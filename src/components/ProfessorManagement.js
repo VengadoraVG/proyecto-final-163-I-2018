@@ -61,6 +61,12 @@ class ProfessorManagement extends Component {
   }
 
   render () {
+    var loader = (
+      <Dimmer active>
+        <Loader size='massive'/>
+      </Dimmer>
+    );
+
     var professors = (
       this.state.professors &&
         Object.keys(this.state.professors).length > 0?
