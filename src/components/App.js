@@ -16,7 +16,7 @@ import 'semantic-ui-css/semantic.min.css';
 import * as routes from '../constants/routes';
 
 const App = () => (
-  <Router>
+  <Router basename={process.env.PUBLIC_URL}>
     <div className="container">
       <Navigation />
 
