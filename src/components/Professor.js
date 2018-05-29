@@ -65,6 +65,12 @@ class Professor extends Component {
     }
   }
 
+  handleSelfDeletion () {
+    if (this.props.onProfessorDelete) {
+      this.props.onProfessorDelete(this.props.id);
+    }
+  }
+
   handleDeletion (event, key) {
     var newModel = this.getModel();
     delete(newModel.assignatures[key]);
@@ -87,7 +93,11 @@ class Professor extends Component {
 
           <Form.Input
              placeholder='Nombre del docente'
-             action={ <Form.Button color='red' icon='minus'/> }
+             action={ <Form.Button
+                           color='red'
+                           icon='minus'
+                           onClick={() => this.handleSelfDeletion() }
+                         /> }
              value={this.props.name}
              onChange={ (e) => this.handleNameChange(e) }
              />
@@ -96,23 +106,24 @@ class Professor extends Component {
             <Header color='teal'>
               Materias a impartir
             </Header>
-
             {
-              Object.keys(this.props.assignatures).map((key, index) => {
-                return (
-                  <Form.Group
-                     key={'assignature-' + index}
-                     >
-                    <AssignatureSelector
-                       assignatureKey={key}
-                       onChange={(e) => this.handleAssignatureChange(e, key)}
-                      />
-                      <Form.Button
-                         icon='minus' color='red'
-                         onClick={(e) => this.handleDeletion(e, key)}/>
-                  </Form.Group>
-                );
-              })
+              this.props.assignatures && Object.keys(this.props.assignatures).length > 0?
+                Object.keys(this.props.assignatures).map((key, index) => {
+                  return (
+                    <Form.Group
+                       key={'assignature-' + index}
+                       >
+                      <AssignatureSelector
+                         assignatureKey={key}
+                         onChange={(e) => this.handleAssignatureChange(e, key)}
+                        />
+                        <Form.Button
+                           icon='minus' color='red'
+                           onClick={(e) => this.handleDeletion(e, key)}/>
+                    </Form.Group>
+                  );
+                }) :
+              ''
             }
 
         <Modal trigger={<Form.Button

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Grid, Header, Segment } from 'semantic-ui-react';
+import { Grid, Header, Segment, Dimmer, Loader } from 'semantic-ui-react';
 
 import Professor from './Professor';
 import NewProfessor from './NewProfessor';
@@ -10,8 +10,9 @@ class ProfessorManagement extends Component {
     super(props);
 
     this.state = {
-      professors: [],
-      newProfessor: ''
+      professors: {},
+      newProfessor: '',
+      loaded: false
     };
 
     this.updateModel();
@@ -20,8 +21,12 @@ class ProfessorManagement extends Component {
   updateModel () {
     db.professors().then((snapshot) => {
       this.setState({
+        loaded: true
+      });
+      this.setState({
         professors: snapshot.val()
       }, () => {
+        console.log(this.state.professors);
         this.forceUpdate();
       });
     });
@@ -34,15 +39,14 @@ class ProfessorManagement extends Component {
     });
   }
 
-  addNewProfessor () {
-    var id;
-    db.getNextProfessorID().then((snapshot) => {
-      id = snapshot.val();
+  removeProfessor (id) {
+    db.removeProfessor(id);
+    this.updateModel();
+  }
 
-      db.setProfessor(id, { name: this.state.newProfessor }).then((snapshot) => {
-        db.setNextProfessorID();
-      });
-    });
+  addNewProfessor () {
+    db.createProfessor({ name: this.state.newProfessor });
+    this.updateModel();
   }
 
   handleNameChange (model, index) {
@@ -57,48 +61,59 @@ class ProfessorManagement extends Component {
   }
 
   render () {
-    return (
-      <div>
-        <Header as='h1' textAlign='center'>
-          Bienvenido administrador!
-        </Header>
-        <Grid
-           textAlign='center'
-           style={{ height: '100%' }}
-           verticalAlign='middle'
-           >
-          <Grid.Column style={{ maxWidth: '500px' }}>
+    var professors = (
+      this.state.professors &&
+        Object.keys(this.state.professors).length > 0?
+        Object.keys(this.state.professors).map((key) => {
+          return (
+            <Professor
+               name={ this.state.professors[key].name }
+               assignatures={ this.state.professors[key].assignatures }
+               key={'professor-' + key}
+               id={key}
+               onProfessorDelete={ (id) => this.removeProfessor(id) }
+              onChange={ (model) => this.handleNameChange(model, key) }
+              />
+          );
+        }): ''
+    );
+
+    var normal = (
+      <Grid
+         textAlign='center'
+         style={{ height: '100%' }}
+         verticalAlign='middle'
+         >
+        <Grid.Column style={{ maxWidth: '500px' }}>
 
 
-            <Segment>
-              <NewProfessor
-                 name={this.state.newProfessor}
-                 onChange={(e) => this.handleNewProfessorChange(e)}
-                 onOK={(e) => this.addNewProfessor()}
-                 />
+          <Segment>
+            <NewProfessor
+               name={this.state.newProfessor}
+               onChange={(e) => this.handleNewProfessorChange(e)}
+              onOK={(e) => this.addNewProfessor()}
+              />
 
               <Header color='teal'>
                 Docentes contratados
               </Header>
 
-              {
-                this.state.professors.map((prof, index) => {
-                  return (
-                    <Professor
-                       name={ prof.name }
-                       assignatures={ prof.assignatures }
-                       key={'professor-' + index}
-                       id={index}
-                       onChange={ (model) => this.handleNameChange(model, index) }
-                      />
-                  );
-                })
-              }
+              { professors }
 
-            </Segment>
+          </Segment>
 
-          </Grid.Column>
-        </Grid>
+        </Grid.Column>
+      </Grid>
+    );
+
+
+    return (
+      <div>
+        <Header as='h1' textAlign='center'>
+          Bienvenido administrador!
+        </Header>
+
+        { this.state.loaded? normal: loader }
       </div>
     );
   }

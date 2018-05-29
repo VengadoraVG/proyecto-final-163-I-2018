@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Route,
 } from 'react-router-dom';
+import { Sidebar, Segment } from 'semantic-ui-react';
 
 import Navigation from './Navigation';
 import SignUpPage from './SignUp';
@@ -18,6 +19,10 @@ const App = () => (
   <Router>
     <div className="container">
       <Navigation />
+
+      <Route exact path={'/'}
+             component={() => <LoginPage />}
+        />
 
       <Route exact path={(routes.SIGN_UP.route)}
              component={() => <SignUpPage />}
@@ -38,6 +43,10 @@ const App = () => (
           </script>
           <script src="./firebase-config.js">
           </script>
+
+          <Sidebar as={Segment} direction='bottom' visible={true}>
+            Creado por: Ruth Margarita García López
+          </Sidebar>
     </div>
   </Router>
 );

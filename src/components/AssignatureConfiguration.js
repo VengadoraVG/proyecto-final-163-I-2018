@@ -1,47 +1,53 @@
 import React, {Component} from 'react';
-import { Header, Grid } from 'semantic-ui-react';
+import { Header, Grid, Dimmer, Loader } from 'semantic-ui-react';
 
 import db from '../firebase/db.js';
-
+import auth from '../auth';
 import Assignature from './Assignature';
 
 import './centered.css';
 
 class AssignatureConfiguration extends Component {
+  loggedIn = false;
+
   constructor (props) {
     super(props);
     this.updateModel();
 
     this.state = {
       assignatures: [],
-      professorID: -1
+      professorID: -1,
+      loaded: false
     };
   }
 
   updateModel () {
-    db.professors().then((snapshot) => {
-      var i=0;
-      var val = snapshot.val();
-      var assignatures = [];
+    if (auth.getUserId() !== '') {
+      this.loggedIn = true;
 
-      for (i=0; i<val.length; i++) {
-        if (val[i].name === this.props.name) {
-          Object.keys(val[i].assignatures).forEach((key) => {
-            assignatures.push({
-              name: key,
-              hour: val[i].assignatures[key].hour,
-              day: val[i].assignatures[key].day
-            });
+      db.professors(auth.getUserId()).then((snapshot) => {
+        var val = snapshot.val();
+        var assignatures = [];
 
-            this[key] = React.createRef();
+        Object.keys(val.assignatures).forEach((key) => {
+          assignatures.push({
+            name: key,
+            hour: val.assignatures[key].hour,
+            day: val.assignatures[key].day
           });
-          break;
-        }
-      }
 
-      this.setState({ assignatures });
-      this.setState({ professorID: i });
-    });
+          this[key] = React.createRef();
+        });
+
+        this.setState({
+          assignatures,
+          professorID: auth.getUserId(),
+          name: val.name,
+          loaded: true
+        });
+      });
+
+    }
   }
 
   handleChange (model, index) {
@@ -61,6 +67,7 @@ class AssignatureConfiguration extends Component {
     }
     delete(assignature.name);
     db.setAssignature(this.state.professorID, assignature, model.name);
+    console.log(this.state.professorID, assignature, model.name);
   }
 
   componentDidUpdate () {
@@ -68,18 +75,41 @@ class AssignatureConfiguration extends Component {
     var assignatures = this.state.assignatures;
     var ref;
 
-    for (i=0; i<assignatures.length; i++) {
-      ref = this[assignatures[i].name].current;
-      ref.setSchedule(assignatures[i].day, assignatures[i].hour);
+    if (this.state.loaded && this.state.loggedIn) {
+      for (i=0; i<assignatures.length; i++) {
+        ref = this[assignatures[i].name].current;
+        ref.setSchedule(assignatures[i].day, assignatures[i].hour);
+      }
     }
-
   }
 
   render () {
-    return (
+    var loader = (
+      <Dimmer active>
+        <Loader size='massive'/>
+      </Dimmer>
+    );
+
+    var assignatures = (
+      this.state.assignatures.map((item, index) => {
+        return (
+          <div style={{ margin: '1em' }}
+               key={'assignature-' + index}>
+            <Assignature
+               name={item.name}
+               ref={this[item.name]}
+               model={item}
+               onChange={(model)=>this.handleChange(model, index)}
+              />
+          </div>
+        );
+      })
+    );
+
+    var loggedInUI = (
       <div>
-        <Header as='h1' textAlign='center' color='teal'>
-          Bienvenido {this.props.name}!
+        <Header as='h1' textAlign='center'>
+          Bienvenido {this.state.name}!
         </Header>
         <Grid
            textAlign='center'
@@ -87,23 +117,37 @@ class AssignatureConfiguration extends Component {
            verticalAlign='middle'
            >
           <Grid.Column style={{ maxWidth: '80%' }}>
-            {
-              this.state.assignatures.map((item, index) => {
-                return (
-                  <div style={{ margin: '1em' }}
-                       key={'assignature-' + index}>
-                    <Assignature
-                       name={item.name}
-                       ref={this[item.name]}
-                       model={item}
-                       onChange={(model)=>this.handleChange(model, index)}
-                      />
-                  </div>
-                );
-              })
-            }
+            { assignatures }
           </Grid.Column>
         </Grid>
+      </div>
+    );
+
+    var notLoggedIn = (
+      <div>
+        <Header as='h1' textAlign='center' color='teal'>
+          Bienvenido!
+        </Header>
+        <Grid
+           textAlign='center'
+           style={{ height: '100%' }}
+           verticalAlign='middle'
+           >
+          <Grid.Column style={{ maxWidth: '80%' }}>
+            Primero debes <a href='/Log-in'>acceder</a>
+          </Grid.Column>
+        </Grid>
+      </div>
+    );
+
+    var body = (
+      this.state.loaded? (this.loggedIn? loggedInUI: notLoggedIn): loader
+    );
+
+    
+    return (
+      <div>
+        { body }
       </div>
     );
   }
