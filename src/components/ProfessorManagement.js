@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { Grid, Header, Segment, Form, Icon } from 'semantic-ui-react';
+import { Grid, Header, Segment } from 'semantic-ui-react';
 
 import Professor from './Professor';
+import NewProfessor from './NewProfessor';
 import db from '../firebase/db';
 
 class ProfessorManagement extends Component {
@@ -9,14 +10,37 @@ class ProfessorManagement extends Component {
     super(props);
 
     this.state = {
-      professors: []
+      professors: [],
+      newProfessor: ''
     };
 
+    this.updateModel();
+  }
+
+  updateModel () {
     db.professors().then((snapshot) => {
       this.setState({
         professors: snapshot.val()
       }, () => {
         this.forceUpdate();
+      });
+    });
+  }
+
+  handleNewProfessorChange (val) {
+    this.setState({
+      ...this.state,
+      newProfessor: val
+    });
+  }
+
+  addNewProfessor () {
+    var id;
+    db.getNextProfessorID().then((snapshot) => {
+      id = snapshot.val();
+
+      db.setProfessor(id, { name: this.state.newProfessor }).then((snapshot) => {
+        db.setNextProfessorID();
       });
     });
   }
@@ -47,13 +71,11 @@ class ProfessorManagement extends Component {
 
 
             <Segment>
-              <Form.Button
-                 attached='top'
-                 color='teal'
-                 >
-                <Icon name='plus'/>
-                Añadir docente
-              </Form.Button>
+              <NewProfessor
+                 name={this.state.newProfessor}
+                 onChange={(e) => this.handleNewProfessorChange(e)}
+                 onOK={(e) => this.addNewProfessor()}
+                 />
 
               <Header color='teal'>
                 Docentes contratados
