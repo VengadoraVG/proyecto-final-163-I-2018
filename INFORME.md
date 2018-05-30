@@ -183,10 +183,10 @@ Se identificaron tres roles:
 
 ## Backlog
 
-![proceso](backlog1.jpg =250x250)
-![proceso](backlog2.jpg =250x250)
-![proceso](backlog3.jpg =250x250)
-![proceso](backlog4.jpg =250x250)
+![proceso](backlog1.jpg)
+![proceso](backlog2.jpg)
+![proceso](backlog3.jpg)
+![proceso](backlog4.jpg)
 
 
 
@@ -234,8 +234,8 @@ $ git clone http://github.com/VengadoraVG/proyecto-final-163-I-2018
 
 Luego, desde la carpeta raíz del código fuente (o desde la carpeta que contiene a este archivo, ejecute la siguiente línea de comando:
 
-$ npm install
-$ npm start
+    $ npm install
+    $ npm start
 
 La aplicación será servida en algún puerto de localhost, por lo general, en http://localhost:3000
 
